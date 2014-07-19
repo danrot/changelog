@@ -7,9 +7,17 @@ def usage():
     print("changelog -r <repository_name>")
 
 
-def build_url(repository):
-    url = "https://api.github.com/repos/" + repository + "/pulls?state=closed"
-    return url
+def get_pull_requests(repository):
+    # construct url
+    url = "https://api.github.com/repos/" + repository + "/pulls?state=closed?per_page=100" # TODO solve per_page issue
+
+    # request information
+    req = requests.get(url)
+
+    # write information to stdout
+    pull_requests = req.json()
+
+    return pull_requests
 
 
 def main():
@@ -27,14 +35,9 @@ def main():
         if option == "-r":
             repository = value
 
-    # construct url
-    url = build_url(repository)
+    pull_requests = get_pull_requests(repository)
 
-    # request information
-    req = requests.get(url)
-
-    # write information to stdout
-    for pull_request in req.json():
+    for pull_request in pull_requests:
         print(pull_request.get("title"))
 
 if __name__ == "__main__":
