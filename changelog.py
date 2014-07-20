@@ -40,34 +40,37 @@ def get_date_by_tag(repository, tag_name):
 def convert_date(from_tag):
     return datetime.datetime.strptime(from_tag, "%Y-%m-%dT%H:%M:%SZ")
 
-def print_pull_request(pull_request):
-    print("* " + pull_request.get("title"))
+def print_pull_request(pull_request, prefix):
+    print(prefix + pull_request.get("title"))
 
 
 def main():
     # read arguments
     opts = None
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hr:f:")
+        opts, args = getopt.getopt(sys.argv[1:], "hr:f:p:")
     except getopt.GetoptError as err:
         print(err)
         usage()
 
     repository = None
     from_tag = None
+    prefix = "* "
 
     for option, value in opts:
         if option == "-r":
             repository = value
         if option == "-f":
             from_tag = value
+        if option == "-p":
+            prefix = value
 
     from_date = convert_date(get_date_by_tag(repository, from_tag))
 
     pull_requests = get_pull_requests(repository, from_date)
 
     for pull_request in pull_requests:
-        print_pull_request(pull_request)
+        print_pull_request(pull_request, prefix)
 
 if __name__ == "__main__":
     main()
