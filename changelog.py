@@ -40,6 +40,9 @@ def get_date_by_tag(repository, tag_name):
 def convert_date(from_tag):
     return datetime.datetime.strptime(from_tag, "%Y-%m-%dT%H:%M:%SZ")
 
+def print_pull_request(pull_request):
+    print("* " + pull_request.get("title"))
+
 
 def main():
     # read arguments
@@ -64,7 +67,7 @@ def main():
     pull_requests = get_pull_requests(repository, from_date)
 
     for pull_request in pull_requests:
-        print(pull_request.get("title"))
+        print_pull_request(pull_request)
 
 if __name__ == "__main__":
     main()
